@@ -24,7 +24,7 @@ class Blockchain(object):
 			'timestamp': time(),
 			'transactions': self.current_transactions,
 			'proof': proof,
-			'previous_hash': previous_hash or self.hash(self.chain[-1])
+			'previous_hash': previous_hash or self.hash(self.chain[-1]),
 		}
 
 		#resets the list of current transactions
@@ -34,12 +34,12 @@ class Blockchain(object):
 		return block
 
 
-	def new_transaction(self, sender, recipent, amount):
+	def new_transaction(self, sender, recipient, amount):
 		# Adds a new transaction to the list of transactions
 		self.current_transactions.append({
 			'sender': sender,
-			'recipent': recipent
-			'amount': amount
+			'recipient': recipient,
+			'amount': amount,
 			})
 
 		return self.last_block['index'] + 1
@@ -108,7 +108,7 @@ def mine():
 	blockchain.new_transaction(
 
 			sender = "0",
-			recipent = node_identifier,
+			recipient = node_identifier,
 			amount = 1,
 
 		)
@@ -137,13 +137,13 @@ def new_transaction():
 	values = request.get_json()
 
 	#checking that the required fields are in the posted data
-	required = ['sender', 'recipent', 'amount']
+	required = ['sender', 'recipient', 'amount']
 	if not all (k in values for k in required):
 		return 'Missing values', 400
 
 	#create a new transaction
 
-	index = blockchain.new_transaction(values['sender'], values['recipent'], values['amount'])
+	index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
 	response = {'message': f'Transaction will be added to Block {index}'}
 
