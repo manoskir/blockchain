@@ -10,8 +10,11 @@ class Blockchain(object):
 	def __init__(self):
 		self.chain = []
 		self.current_transactions = []
+		
+		# Create the genesis block
+		self.new_block(previous_hash=1, proof=100)
 
-	def new_block(self, proof, pevious_hash=None):
+	def new_block(self, proof, previous_hash=None):
 		'''
 		Creates a new Block and adds it to the chain
 		:param proof: <int> The proof given by the proof of work algo
@@ -49,7 +52,7 @@ class Blockchain(object):
 		utilizes valid proof and adds 1 in the proof number until it finds the solution
 		'''
 		proof = 0
-		while valid_proof(last_proof, proof) is False:
+		while self.valid_proof(last_proof, proof) is False:
 
 			proof += 1
 
@@ -69,6 +72,11 @@ class Blockchain(object):
 
 		return guess_hash[:4] == "0000"
 
+	@property
+	def last_block(self):
+		#returns the last block in the chain
+		return self.chain[-1]
+
 	@staticmethod
 	def hash(block):
 		# Creates a sha-256 hash of a block
@@ -76,12 +84,6 @@ class Blockchain(object):
 		block_string = json.dumps(block, sort_keys=True).encode()
 
 		return hashlib.sha256(block_string).hexdigest()
-
-	@property
-	def last_block(self):
-		#returns the last block in the chain
-		return self.chain[-1]
-
 
 #initiate our Node
 app = Flask(__name__)
